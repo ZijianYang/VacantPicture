@@ -17,7 +17,7 @@ import android.widget.Toolbar
 import androidx.core.content.FileProvider
 import java.io.File
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     val takePhoto = 1
     val fromAlbum = 2
@@ -29,6 +29,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 //        val  toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
 //        setSupportActionBar(toolbar)
+        val forceOffline: Button = findViewById(R.id.forceOffline)
+        forceOffline.setOnClickListener {
+            val intent = Intent("com.yzj.broadcastbestpractice.FORCE_OFFLINE")
+            sendBroadcast(intent)
+        }
         val takePhotoBtn: Button = findViewById(R.id.takePhotoBtn)
         takePhotoBtn.setOnClickListener {
             // 创建File对象，用于存储拍照后的图片
