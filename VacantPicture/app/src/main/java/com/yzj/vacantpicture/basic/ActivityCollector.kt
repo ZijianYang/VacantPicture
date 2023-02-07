@@ -1,4 +1,4 @@
-package com.yzj.vacantpicture
+package com.yzj.vacantpicture.basic
 
 import android.app.Activity
 

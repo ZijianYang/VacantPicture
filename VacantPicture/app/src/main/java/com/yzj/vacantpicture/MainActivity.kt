@@ -8,14 +8,23 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toolbar
+import android.widget.Toast
 import androidx.core.content.FileProvider
+import com.yzj.vacantpicture.basic.AppDatabase
+import com.yzj.vacantpicture.basic.BaseActivity
+import com.yzj.vacantpicture.basic.MessageDigestUtils
+import com.yzj.vacantpicture.database.entity.User
+import com.yzj.vacantpicture.databinding.ActivityLoginBinding
+import com.yzj.vacantpicture.databinding.ActivityMainBinding
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import java.io.File
+import kotlin.concurrent.thread
 
 class MainActivity : BaseActivity() {
 
@@ -23,19 +32,27 @@ class MainActivity : BaseActivity() {
     val fromAlbum = 2
     lateinit var imageUri: Uri
     lateinit var outputImage: File
-
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-//        val  toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
-//        setSupportActionBar(toolbar)
-        val forceOffline: Button = findViewById(R.id.forceOffline)
-        forceOffline.setOnClickListener {
+        binding=ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        val userDao = AppDatabase.getDatabase(this).userDao()
+        lateinit var users:List<User>
+        runBlocking {
+            users=userDao.getAll();
+        }
+        Toast.makeText(
+            this, users[0].Name+"-"+users[0].Password,
+            Toast.LENGTH_SHORT
+        ).show()
+        binding.forceOffline.setOnClickListener {
             val intent = Intent("com.yzj.broadcastbestpractice.FORCE_OFFLINE")
             sendBroadcast(intent)
         }
-        val takePhotoBtn: Button = findViewById(R.id.takePhotoBtn)
-        takePhotoBtn.setOnClickListener {
+
+        binding.takePhotoBtn.setOnClickListener {
             // 创建File对象，用于存储拍照后的图片
             outputImage = File(externalCacheDir, "output_image.jpg")
             if (outputImage.exists()) {
@@ -52,8 +69,8 @@ class MainActivity : BaseActivity() {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
             startActivityForResult(intent, takePhoto)
         }
-        val fromAlbumBtn: Button = findViewById(R.id.fromAlbumBtn)
-        fromAlbumBtn.setOnClickListener {
+        //val fromAlbumBtn: Button = findViewById(R.id.fromAlbumBtn)
+        binding.fromAlbumBtn.setOnClickListener {
             // 打开文件选择器
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
             intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -71,8 +88,7 @@ class MainActivity : BaseActivity() {
                     // 将拍摄的照片显示出来
                     val bitmap = BitmapFactory.decodeStream(contentResolver.
                     openInputStream(imageUri))
-                    val imageView: ImageView = findViewById(R.id.imageView)
-                    imageView.setImageBitmap(rotateIfRequired(bitmap))
+                    binding.imageView.setImageBitmap(rotateIfRequired(bitmap))
                 }
             }
             fromAlbum -> {
@@ -80,8 +96,7 @@ class MainActivity : BaseActivity() {
                     data.data?.let { uri ->
                         // 将选择的图片显示
                         val bitmap = getBitmapFromUri(uri)
-                        val imageView: ImageView = findViewById(R.id.imageView)
-                        imageView.setImageBitmap(bitmap)
+                        binding.imageView.setImageBitmap(bitmap)
                     }
                 }
             }

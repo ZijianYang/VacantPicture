@@ -21,10 +21,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".DetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
