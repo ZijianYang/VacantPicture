@@ -3,18 +3,14 @@ package com.yzj.vacantpicture
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.TextView
 import android.widget.Toast
-import com.yzj.vacantpicture.basic.AppDatabase
+import com.yzj.vacantpicture.database.AppDatabase
 import com.yzj.vacantpicture.basic.BaseActivity
 import com.yzj.vacantpicture.basic.MessageDigestUtils
 import com.yzj.vacantpicture.database.entity.User
 import com.yzj.vacantpicture.databinding.ActivityLoginBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlin.concurrent.thread
 
 class LoginActivity : BaseActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -52,13 +48,13 @@ class LoginActivity : BaseActivity() {
                 binding.
                 passwordEdit.text.toString()
 
-            val userDao = AppDatabase.getDatabase(this).userDao()
-            val user =User("admin", MessageDigestUtils.md5("123456"))
-            val async=GlobalScope.async {
-                userDao.insertUser(user);
-            }
-            Toast.makeText(this,   user.id.toString(),
-                Toast.LENGTH_SHORT).show()
+//            val userDao = AppDatabase.getDatabase(this).userDao()
+//            val user =User("admin", MessageDigestUtils.md5("123456"))
+//            val async=GlobalScope.async {
+//                userDao.insertUser(user);
+//            }
+//            Toast.makeText(this,   user.id.toString(),
+//                Toast.LENGTH_SHORT).show()
             // 如果账号是admin且密码是123456，就认为登录成功
             if (account == "admin" && password == "123456") {
                 val editor = prefs.edit()

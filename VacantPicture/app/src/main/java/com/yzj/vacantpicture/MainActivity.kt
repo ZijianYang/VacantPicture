@@ -10,21 +10,15 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.Button
-import android.widget.ImageView
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.FileProvider
-import com.yzj.vacantpicture.basic.AppDatabase
+import com.yzj.vacantpicture.database.AppDatabase
 import com.yzj.vacantpicture.basic.BaseActivity
-import com.yzj.vacantpicture.basic.MessageDigestUtils
 import com.yzj.vacantpicture.database.entity.User
-import com.yzj.vacantpicture.databinding.ActivityLoginBinding
 import com.yzj.vacantpicture.databinding.ActivityMainBinding
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import java.io.File
-import kotlin.concurrent.thread
 
 class MainActivity : BaseActivity() {
 
@@ -43,6 +37,8 @@ class MainActivity : BaseActivity() {
         runBlocking {
             users=userDao.getAll();
         }
+        Log.d("MainActivity", users[0].Name+"-"+users[0].Password)
+
         Toast.makeText(
             this, users[0].Name+"-"+users[0].Password,
             Toast.LENGTH_SHORT
@@ -69,7 +65,6 @@ class MainActivity : BaseActivity() {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
             startActivityForResult(intent, takePhoto)
         }
-        //val fromAlbumBtn: Button = findViewById(R.id.fromAlbumBtn)
         binding.fromAlbumBtn.setOnClickListener {
             // 打开文件选择器
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)

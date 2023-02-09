@@ -1,4 +1,4 @@
-package com.yzj.vacantpicture.basic
+package com.yzj.vacantpicture.database
 
 import android.content.Context
 import androidx.room.Database
@@ -20,6 +20,7 @@ abstract class AppDatabase : RoomDatabase() {
             return Room.databaseBuilder(context.applicationContext,
                 AppDatabase::class.java, "app_database",)
                 .fallbackToDestructiveMigration()
+                .createFromAsset("database/myapp.db")
                 .build().apply {
                     instance = this
                 }
